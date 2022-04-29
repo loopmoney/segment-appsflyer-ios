@@ -35,8 +35,18 @@
             BOOL alreadyActive = [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
             // for regular Segment integration alreadyActive should always be false
             if (alreadyActive) {
-                [self applicationDidBecomeActive];
-                NSLog(@"Segment React Native AppsFlye rintegration is used, sending first launch manually");
+                
+                NSString *userId =  [[SEGAnalytics sharedAnalytics] getAnonymousId];
+                [[SEGAnalytics sharedAnalytics] identify:(userId)];
+                [[SEGAnalytics sharedAnalytics] flush];
+                
+                NSTimeInterval delayInSeconds = 2.0;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self applicationDidBecomeActive];
+                    NSLog(@"Segment Flutter AppsFlye rintegration is used, sending first launch manually");
+               
+                });
             }
         });
     }
