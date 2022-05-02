@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/loopmoney/segment-appsflyer-ios"
   s.license          =  { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
-  s.source           = { :git => 'https://github.com/loopmoney/segment-appsflyer-ios.git', , :branch => "master", :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/loopmoney/segment-appsflyer-ios.git', :branch => "master", :tag => s.version.to_s }
   
 
   s.source_files = 'segment-appsflyer-ios/Classes/**/*'
