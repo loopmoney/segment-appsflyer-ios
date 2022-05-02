@@ -13,8 +13,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/loopmoney/segment-appsflyer-ios.git', , :branch => "master", :tag => s.version.to_s }
   
 
-  s.source_files = 'segment-appsflyer-ios/Classes/**/*'
-  s.public_header_files = 'segment-appsflyer-ios/Classes/**/*.h'
+  s.source_files = '**/Classes/**/*'
+  s.public_header_files = '**/Classes/**/*.h'
   
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '9.0'
