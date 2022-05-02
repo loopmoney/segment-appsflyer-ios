@@ -9,10 +9,12 @@ Pod::Spec.new do |s|
 
   s.homepage         = "https://github.com/loopmoney/segment-appsflyer-ios"
   s.license          =  { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { "Appsflyer" => "maxim@appsflyer.com" }
-  s.source           = { :git => "https://github.com/loopmoney/segment-appsflyer-ios.git", :tag => s.version.to_s }
+  s.author           = { 'Your Company' => 'email@example.com' }
+  s.source           = { :git => 'https://github.com/loopmoney/segment-appsflyer-ios.git', , :branch => "master", :tag => s.version.to_s }
   
 
+  s.source_files = 'Classes/*.{h,m}'
+  
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '9.0'
   s.requires_arc = true
