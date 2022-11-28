@@ -2,7 +2,7 @@
 
 # AppsFlyer integration for Segment.
 
-## This is a Segment wrapper for AppsFlyer SDK that is built with iOS SDK v6.5.2. 
+## This is a Segment wrapper for AppsFlyer SDK that is built with iOS SDK v6.8.1. 
 
 [![Version](https://img.shields.io/cocoapods/v/segment-appsflyer-ios.svg?style=flat)](http://cocoapods.org/pods/segment-appsflyer-ios)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -20,6 +20,7 @@
 
 - [Breaking changes](#breaking-changes)
 - [Installation](#installation)
+- [Manual mode](#manual)
 - [Usage](#usage) 
   - [Objective-C](#usage-obj-c)
   - [Swift](#usage-swift)
@@ -47,12 +48,12 @@ To install the segment-appsflyer-ios integration:
 
 **Production** version: 
 ```ruby
-pod 'segment-appsflyer-ios', '6.5.2'
+pod 'segment-appsflyer-ios', '6.8.1'
 ```
 
 **Strict mode SDK** version: 
 ```ruby
-pod 'segment-appsflyer-ios/Strict', '6.5.2'
+pod 'segment-appsflyer-ios/Strict', '6.8.1'
 ```
 Use the strict mode SDK to completely remove IDFA collection functionality and AdSupport framework dependencies (for example, when developing apps for kids).
 
@@ -64,7 +65,7 @@ Use the strict mode SDK to completely remove IDFA collection functionality and A
 
 **Production** version: 
 ```ogdl
-github "AppsFlyerSDK/segment-appsflyer-ios" "6.5.2"
+github "AppsFlyerSDK/segment-appsflyer-ios" "6.8.1"
 ```
 
   
@@ -72,7 +73,17 @@ github "AppsFlyerSDK/segment-appsflyer-ios" "6.5.2"
   
  In XCode, go to **File** > **Swift Package** > **Add Package dependency...** And add https://github.com/AppsFlyerSDK/segment-appsflyer-ios for the package dependency url. 
 
-  
+## <a id="manual"> Manual mode
+Starting version `6.8.0`, we support a manual mode to seperate the initialization of the AppsFlyer SDK and the start of the SDK. In this case, the AppsFlyer SDK won't start automatically, giving the developper more freedom when to start the AppsFlyer SDK. Please note that in manual mode, the developper is required to implement the API ``AppsFlyerLib.shared().start()`` in order to start the SDK. 
+### Example:
+```objective-c
+  [SEGAppsFlyerIntegrationFactory createWithManualMode:YES];
+``` 
+Please look at the examples below to see how to use the manual mode with delegate. \
+To start the AppsFlyer SDK, use the `start()` API, like the following :
+```objective-c
+ [[AppsFlyerLib shared] start];
+``` 
   
 ## <a id="usage"> Usage
 
@@ -93,7 +104,7 @@ In `AppDelegate.m` ➜ `didFinishLaunchingWithOptions`:
     // For ApsFlyer debug logs
     [AppsFlyerLib shared].isDebug = YES;
     
-    [[AppsFlyerLib shared] waitForAdvertisingIdentifierWithTimeoutInterval:60];
+    [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:60];
     /*
      Based on your needs you can either pass a delegate to process deferred
      and direct deeplinking callbacks or disregard them.
@@ -101,6 +112,11 @@ In `AppDelegate.m` ➜ `didFinishLaunchingWithOptions`:
      */
     SEGAppsFlyerIntegrationFactory* factoryNoDelegate = [SEGAppsFlyerIntegrationFactory instance];
 //    SEGAppsFlyerIntegrationFactory* factoryWithDelegate = [SEGAppsFlyerIntegrationFactory createWithLaunchDelegate:self];
+
+// To use the manual mode, use the following method
+//    SEGAppsFlyerIntegrationFactory* factoryNoDelegate = [SEGAppsFlyerIntegrationFactory createWithManualMode:YES];
+//    SEGAppsFlyerIntegrationFactory* factoryWithDelegate = [SEGAppsFlyerIntegrationFactory createWithLaunchDelegate:self andManualMode:YES];
+
     
     SEGAnalyticsConfiguration *config = [SEGAnalyticsConfiguration configurationWithWriteKey:@"WYsuyFINOKZuQyQAGn5JQoCgIdhOI146"];
     [config use:factoryNoDelegate];
@@ -117,7 +133,7 @@ In `AppDelegate.m` ➜ `didFinishLaunchingWithOptions`:
 In `AppDelegate.m` ➜ `applicationDidBecomeActive`:
 ```objective-c
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Getting user consent dialog. Please read https://support.appsflyer.com//hc/en-us/articles/207032066#integration-35-support-apptrackingtransparency-att
+    // Getting user consent dialog. Please read https://dev.appsflyer.com/hc/docs/integrate-ios-sdk#enabling-app-tracking-transparency-att-support
     if (@available(iOS 14, *)) {
         [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
             //....
@@ -148,7 +164,7 @@ import AppsFlyerLib
 ```swift 
     // For AppsFLyer debug logs uncomment the line below
     // AppsFlyerLib.shared().isDebug = true
-    AppsFlyerLib.shared().waitForAdvertisingIdentifier(withTimeoutInterval: 60)
+    AppsFlyerLib.shared().waitForATTUserAuthorization(withTimeoutInterval: 60)
 
     /*
      Based on your needs you can either pass a delegate to process deferred
@@ -157,6 +173,12 @@ import AppsFlyerLib
      */
 //    let factoryWithDelegate : SEGAppsFlyerIntegrationFactory = SEGAppsFlyerIntegrationFactory.create(withLaunch: self)
     let factoryNoDelegate = SEGAppsFlyerIntegrationFactory()
+    
+    /* If you want to use the manual mode, please use the following methods
+      with or without delegate */
+     //  let factoryWithDelegate : SEGAppsFlyerIntegrationFactory = SEGAppsFlyerIntegrationFactory.create(withLaunch: self, andManualMode:true)
+   // let factoryNoDelegate = SEGAppsFlyerIntegrationFactory.create(withManualMode: true)
+    
     
     // Segment initialization
     let config = AnalyticsConfiguration(writeKey: "SEGMENT_KEY")
@@ -332,6 +354,7 @@ extension AppDelegate: SEGAppsFlyerDeepLinkDelegate {
 }
 
 ```
+
 
 ## <a id="install_attributed"> Install Attributed event
 
